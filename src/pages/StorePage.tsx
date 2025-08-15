@@ -1,8 +1,7 @@
 // src/pages/StorePage.tsx
-import  { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import supabaseClient from '../lib/supabaseClient';
-//import ProductCard from '../components/ProductCard';
 
 type User = {
   id: string;
@@ -24,7 +23,7 @@ type Product = {
   slug?: string | null;
 };
 
-export default function StorePage(): any {
+export default function StorePage(): any{
   const { slug } = useParams<{ slug: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -106,10 +105,12 @@ export default function StorePage(): any {
   // Render loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading store...</p>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading store...</p>
+          </div>
         </div>
       </div>
     );
@@ -118,21 +119,23 @@ export default function StorePage(): any {
   // Render error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-md text-center">
-          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-grow flex items-center justify-center p-4">
+          <div className="max-w-md text-center">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Store</h2>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-gray-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-black transition"
+            >
+              Try Again
+            </button>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Store</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="bg-gray-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-black transition"
-          >
-            Try Again
-          </button>
         </div>
       </div>
     );
@@ -141,22 +144,24 @@ export default function StorePage(): any {
   // Render store not found
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-md text-center">
-          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="flex-grow flex items-center justify-center p-4">
+          <div className="max-w-md text-center">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Store Not Found</h2>
+            <p className="text-gray-600">We couldn't find the store you're looking for</p>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Store Not Found</h2>
-          <p className="text-gray-600">We couldn't find the store you're looking for</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Premium Store Header */}
       <header className="relative bg-gradient-to-b from-gray-900 to-black text-white py-16 overflow-hidden">
         {/* Decorative elements */}
@@ -250,124 +255,126 @@ export default function StorePage(): any {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Products Grid */}
-        {products.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="mx-auto h-24 w-24 flex items-center justify-center rounded-full bg-gray-100 mb-6">
-              <svg className="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </div>
-            <h3 className="mt-2 text-xl font-bold text-gray-900">No products yet</h3>
-            <p className="mt-2 text-gray-600 max-w-md mx-auto">
-              This store hasn't added any products yet. Check back soon!
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Products</h2>
-                <p className="text-gray-600 mt-2">Handpicked selection of quality products</p>
+      <main className="flex-grow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Products Grid */}
+          {products.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="mx-auto h-24 w-24 flex items-center justify-center rounded-full bg-gray-100 mb-6">
+                <svg className="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
               </div>
-              <div className="flex items-center mt-4 md:mt-0">
-                <label htmlFor="sort" className="mr-2 text-sm font-medium text-gray-700">Sort by:</label>
-                <div className="relative">
-                  <select id="sort" className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500">
-                    <option>Featured</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Newest Arrivals</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
+              <h3 className="mt-2 text-xl font-bold text-gray-900">No products yet</h3>
+              <p className="mt-2 text-gray-600 max-w-md mx-auto">
+                This store hasn't added any products yet. Check back soon!
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Products</h2>
+                  <p className="text-gray-600 mt-2">Handpicked selection of quality products</p>
                 </div>
-              </div>
-            </div>
-
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {products.map((product) => (
-                <div key={product.id} className="group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
-                  {/* Product Image */}
-                  <div className="relative h-60 overflow-hidden">
-                    {product.image_url ? (
-                      <img
-                        src={product.image_url}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-100 border-2 border-dashed border-gray-300 rounded-t-xl flex items-center justify-center">
-                        <span className="text-gray-500">No image</span>
-                      </div>
-                    )}
-                    {product.original_price && (
-                      <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                        SALE
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="p-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
-                        <p className="text-gray-600 text-sm mt-1">{product.category || 'Premium Product'}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-gray-900">${(product.price ?? 0).toFixed(2)}</p>
-                        {product.original_price && (
-                          <p className="text-sm text-gray-500 line-through">${product.original_price.toFixed(2)}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex space-x-3">
-                      <button className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-black transition duration-300 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        Add to Cart
-                      </button>
-                      <button className="bg-amber-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-amber-600 transition duration-300 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                        Buy Now
-                      </button>
+                <div className="flex items-center mt-4 md:mt-0">
+                  <label htmlFor="sort" className="mr-2 text-sm font-medium text-gray-700">Sort by:</label>
+                  <div className="relative">
+                    <select id="sort" className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500">
+                      <option>Featured</option>
+                      <option>Price: Low to High</option>
+                      <option>Price: High to Low</option>
+                      <option>Newest Arrivals</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
                     </div>
                   </div>
                 </div>
-              ))}
-            </section>
-          </>
-        )}
+              </div>
 
-        {/* Newsletter */}
-        <div className="mt-24 bg-gradient-to-r from-gray-800 to-black text-white rounded-2xl overflow-hidden p-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Join Our Newsletter</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto mb-8">
-              Subscribe to receive updates, access to exclusive deals, and be the first to know about new arrivals.
-            </p>
-            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-grow px-5 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-              <button
-                type="submit"
-                className="bg-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-amber-600 transition duration-300"
-              >
-                Subscribe
-              </button>
-            </form>
+              <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {products.map((product) => (
+                  <div key={product.id} className="group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    {/* Product Image */}
+                    <div className="relative h-60 overflow-hidden">
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100 border-2 border-dashed border-gray-300 rounded-t-xl flex items-center justify-center">
+                          <span className="text-gray-500">No image</span>
+                        </div>
+                      )}
+                      {product.original_price && (
+                        <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                          SALE
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
+                          <p className="text-gray-600 text-sm mt-1">{product.category || 'Premium Product'}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-gray-900">${(product.price ?? 0).toFixed(2)}</p>
+                          {product.original_price && (
+                            <p className="text-sm text-gray-500 line-through">${product.original_price.toFixed(2)}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex space-x-3">
+                        <button className="flex-1 bg-gray-800 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-900 transition duration-300 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                          Add to Cart
+                        </button>
+                        <button className="bg-amber-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-amber-600 transition duration-300 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                          Buy Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </section>
+            </>
+          )}
+
+          {/* Newsletter */}
+          <div className="mt-24 bg-gradient-to-r from-gray-800 to-black text-white rounded-2xl overflow-hidden p-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl font-bold mb-4">Join Our Newsletter</h2>
+              <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+                Subscribe to receive updates, access to exclusive deals, and be the first to know about new arrivals.
+              </p>
+              <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-grow px-5 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <button
+                  type="submit"
+                  className="bg-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-amber-600 transition duration-300"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </main>

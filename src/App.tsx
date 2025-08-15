@@ -7,6 +7,7 @@ function HomePage() {
     <div>
       <h1>Home</h1>
       <a href="/store/reseller">Go to Reseller Store</a>
+        <a href="/store/torpa">Go to torpa Store</a>
     </div>
   );
 }
