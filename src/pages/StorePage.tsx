@@ -357,22 +357,10 @@ export default function StorePage(): any{
           {/* Newsletter */}
           <div className="mt-24 bg-gradient-to-r from-gray-800 to-black text-white rounded-2xl overflow-hidden p-10">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-4">Join Our Newsletter</h2>
-              <p className="text-gray-300 max-w-2xl mx-auto mb-8">
-                Subscribe to receive updates, access to exclusive deals, and be the first to know about new arrivals.
-              </p>
+              <h2 className="text-3xl font-bold mb-4">Shop With Zero Risk</h2>
+          
               <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="flex-grow px-5 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-                <button
-                  type="submit"
-                  className="bg-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-amber-600 transition duration-300"
-                >
-                  Subscribe
-                </button>
+            
               </form>
             </div>
           </div>
