@@ -6,15 +6,15 @@ export function HomePage() {
   const primaryLight = "#1a6b3f"; // lighter variant
   const primaryDark = "#002216"; // darker variant
 
-  const products = [
-    { id: 1, name: "Classic Running Shoe", price: "$69.99", img: `https://source.unsplash.com/400x300/?running-shoes` },
-    { id: 2, name: "Signature Perfume", price: "$59.99", img: `https://source.unsplash.com/400x300/?perfume` },
-    { id: 3, name: "Everyday T-Shirt", price: "$24.99", img: `https://source.unsplash.com/400x300/?tshirt` },
-    { id: 4, name: "Whey Protein Powder", price: "$34.99", img: `https://source.unsplash.com/400x300/?protein-powder` }
-  ];
+const products = [
+  { id: 1, name: "Classic Running Shoe", price: "$69.99", img: "/images/shoe.jpg" },
+  { id: 2, name: "Signature Perfume",     price: "$59.99", img: "/images/perfume.jpg" },
+  { id: 3, name: "Everyday Shoe",      price: "$24.99", img: "/images/tshirt.jpg" },
+  { id: 4, name: "Whey Protein Powder",   price: "$34.99", img: "/images/protein.jpg" }
+];
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(120deg,#071029 0%, #1a1733 50%, #38102a 100%)", color: "white" }}>
+    <div className="min-h-screen" style={{ background: "linear-gradient(120deg,#071029 0%, #1a1733 50%, #103817ff 100%)", color: "white" }}>
       {/* Inline CSS for primary theme utilities (keeps things simple without touching tailwind config) */}
       <style>{`
         :root {
@@ -57,9 +57,9 @@ export function HomePage() {
           </h1>
         </div>
         <div className="hidden md:flex space-x-8">
-          <a href="#how-it-works" className="hover:opacity-90 transition">How It Works</a>
-          <a href="#benefits" className="hover:opacity-90 transition">Benefits</a>
-          <a href="#testimonials" className="hover:opacity-90 transition">Success Stories</a>
+          <a href="#how-it-works" className="hover:opacity-90 text-white transition">How It Works</a>
+          <a href="#benefits" className="hover:opacity-90 text-white transition">Benefits</a>
+          <a href="#testimonials" className="hover:opacity-90 text-white transition">Success Stories</a>
         </div>
         <div>
           <Link 

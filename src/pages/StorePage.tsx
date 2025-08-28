@@ -1,5 +1,5 @@
 // src/pages/StorePage.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import supabaseClient from '../lib/supabaseClient';
 
@@ -36,6 +36,11 @@ export default function StorePage(): any{
     { type: 'facebook', url: 'https://facebook.com' },
     { type: 'pinterest', url: 'https://pinterest.com' },
   ];
+
+  // Theme colors (do not change logic)
+  const primary = '#003303';
+  const primaryLight = '#1a6b3f';
+  const primaryDark = '#002216';
 
   useEffect(() => {
     let isMounted = true;
@@ -102,13 +107,46 @@ export default function StorePage(): any{
     return () => { isMounted = false; };
   }, [slug]);
 
+  // small utility styles are injected here so we don't touch logic or your tailwind config
+  const styleBlock = `
+    :root{ --primary: ${primary}; --primary-light: ${primaryLight}; --primary-dark: ${primaryDark}; }
+    .accent-gradient { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
+    .accent-btn { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; }
+    .accent-btn:hover { background: linear-gradient(90deg, var(--primary-dark), var(--primary)); }
+    .accent-select:focus { outline: none; box-shadow: 0 0 0 4px rgba(0,51,3,0.12); border-color: var(--primary) !important; }
+    .accent-circle { background: linear-gradient(90deg, var(--primary-light), var(--primary)); }
+    .icon-accent { color: var(--primary-light); }
+    .no-scrollbar::-webkit-scrollbar{display:none}
+    .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
+  `;
+
+  // Collections derived from fetched products (UI only)
+  const collections = [
+    { id: 'editors', title: "Editor's Picks", items: products.slice(0,4) },
+    { id: 'trending', title: 'Trending Now', items: products.slice(0,6).reverse() },
+    { id: 'new', title: 'Seasonal Picks', items: products.slice(-1) }
+  ];
+
+  // UI refs + handlers for collections carousel (pure UI, no data changes)
+  const collectionsRef = useRef<HTMLDivElement | null>(null);
+  const scrollCollections = (dir: 'left' | 'right') => {
+    const el = collectionsRef.current;
+    if (!el) return;
+    const amount = Math.max(260, el.clientWidth * 0.7);
+    el.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
+  }; 
+
   // Render loading state
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
+        <style>{styleBlock}</style>
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div
+              className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin mx-auto"
+              style={{ borderColor: primary, borderTopColor: 'transparent' }}
+            />
             <p className="mt-4 text-gray-600">Loading store...</p>
           </div>
         </div>
@@ -120,6 +158,7 @@ export default function StorePage(): any{
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
+        <style>{styleBlock}</style>
         <div className="flex-grow flex items-center justify-center p-4">
           <div className="max-w-md text-center">
             <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -145,6 +184,7 @@ export default function StorePage(): any{
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
+        <style>{styleBlock}</style>
         <div className="flex-grow flex items-center justify-center p-4">
           <div className="max-w-md text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -162,11 +202,12 @@ export default function StorePage(): any{
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <style>{styleBlock}</style>
       {/* Premium Store Header */}
       <header className="relative bg-gradient-to-b from-gray-900 to-black text-white py-16 overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-10 w-64 h-64 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full mix-blend-soft-light blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-20 right-10 w-64 h-64 rounded-full mix-blend-soft-light blur-3xl animate-pulse-slow accent-gradient"></div>
           <div className="absolute bottom-10 left-10 w-48 h-48 bg-gradient-to-r from-teal-400 to-cyan-600 rounded-full mix-blend-soft-light blur-3xl animate-pulse-slow"></div>
         </div>
 
@@ -238,7 +279,7 @@ export default function StorePage(): any{
       <nav className="bg-white shadow-sm sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center space-x-8 py-3">
-            <a href="#" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-amber-500 text-sm font-medium">
+            <a href="#" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" style={{ borderBottomColor: primary }}>
               All Products
             </a>
             <a href="#" className="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">
@@ -257,7 +298,6 @@ export default function StorePage(): any{
       {/* Main Content */}
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Products Grid */}
           {products.length === 0 ? (
             <div className="text-center py-16">
               <div className="mx-auto h-24 w-24 flex items-center justify-center rounded-full bg-gray-100 mb-6">
@@ -272,95 +312,144 @@ export default function StorePage(): any{
             </div>
           ) : (
             <>
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Products</h2>
-                  <p className="text-gray-600 mt-2">Handpicked selection of quality products</p>
+              {/* Collections */}
+              <div className="mb-10">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-2xl  font-bold text-gray-900">Collections</h3>
+                  <div className="flex items-center gap-2">
+                    <button aria-label="Scroll left" onClick={() => scrollCollections('left')} className="p-2 rounded-full bg-white/90 shadow hover:scale-105 transition">
+                      <svg className="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <button aria-label="Scroll right" onClick={() => scrollCollections('right')} className="p-2 rounded-full bg-white/90 shadow hover:scale-105 transition">
+                      <svg className="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center mt-4 md:mt-0">
-                  <label htmlFor="sort" className="mr-2 text-sm font-medium text-gray-700">Sort by:</label>
-                  <div className="relative">
-                    <select id="sort" className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500">
-                      <option>Featured</option>
-                      <option>Price: Low to High</option>
-                      <option>Price: High to Low</option>
-                      <option>Newest Arrivals</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </div>
+
+                <div className="relative">
+                  <div ref={collectionsRef} className="flex space-x-6 overflow-x-auto no-scrollbar py-4 px-2 snap-x snap-mandatory scroll-smooth">
+                    {collections.map((col) => (
+                      <div key={col.id} className="snap-start min-w-[260px] md:min-w-[320px] lg:min-w-[380px] bg-white rounded-3xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer group">
+                        <div className="relative h-44 md:h-56 lg:h-64">
+                          {col.items && col.items.length > 0 ? (
+                            <img src={col.items[0].image_url || '/images/placeholder.png'} alt={col.title} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-gray-100 flex items-center justify-center">No image</div>
+                          )}
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-90"></div>
+
+                          <div className="absolute left-4 bottom-4">
+                            <h4 className="text-xl font-bold text-white">{col.title}</h4>
+                            <p className="text-sm text-white/90">{col.items.length} items • curated</p>
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-white">
+                          <div className="flex -space-x-2">
+                            {col.items.slice(0,3).map((it) => (
+                              <div key={it.id} className="w-12 h-12 rounded-lg overflow-hidden border-2 border-white shadow-sm">
+                                <img src={it.image_url || '/images/placeholder.png'} alt={it.name} className="w-full h-full object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
-              <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {products.map((product) => (
-                  <div key={product.id} className="group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
-                    {/* Product Image */}
-                    <div className="relative h-60 overflow-hidden">
-                      {product.image_url ? (
-                        <img
-                          src={product.image_url}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-100 border-2 border-dashed border-gray-300 rounded-t-xl flex items-center justify-center">
-                          <span className="text-gray-500">No image</span>
-                        </div>
-                      )}
-                      {product.original_price && (
-                        <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                          SALE
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
-                          <p className="text-gray-600 text-sm mt-1">{product.category || 'Premium Product'}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lg font-bold text-gray-900">${(product.price ?? 0).toFixed(2)}</p>
-                          {product.original_price && (
-                            <p className="text-sm text-gray-500 line-through">${product.original_price.toFixed(2)}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="mt-4 flex space-x-3">
-                        <button className="flex-1 bg-gray-800 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-900 transition duration-300 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
-                          Add to Cart
-                        </button>
-                        <button className="bg-amber-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-amber-600 transition duration-300 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                          Buy Now
-                        </button>
+              {/* Products Grid */}
+              <div>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Products</h2>
+                    <p className="text-gray-600 mt-2">Handpicked selection of quality products</p>
+                  </div>
+                  <div className="flex items-center mt-4 md:mt-0">
+                    <label htmlFor="sort" className="mr-2 text-sm font-medium text-gray-700">Sort by:</label>
+                    <div className="relative">
+                      <select id="sort" className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none">
+                        <option>Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Newest Arrivals</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                        </svg>
                       </div>
                     </div>
                   </div>
-                ))}
-              </section>
+                </div>
+
+                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                  {products.map((product) => (
+                    <div key={product.id} className="group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+                      {/* Product Image */}
+                      <div className="relative h-60 overflow-hidden">
+                        {product.image_url ? (
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-100 border-2 border-dashed border-gray-300 rounded-t-xl flex items-center justify-center">
+                            <span className="text-gray-500">No image</span>
+                          </div>
+                        )}
+                        {product.original_price && (
+                          <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            SALE
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
+                            <p className="text-gray-600 text-sm mt-1">{product.category || 'Premium Product'}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-gray-900">${(product.price ?? 0).toFixed(2)}</p>
+                            {product.original_price && (
+                              <p className="text-sm text-gray-500 line-through">${product.original_price.toFixed(2)}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex space-x-3">
+                          <button className="flex-1 bg-gray-800 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-900 transition duration-300 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Add to Cart
+                          </button>
+                          <button className="accent-btn text-white py-2 px-4 rounded-lg font-medium hover:opacity-95 transition duration-300 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                            Buy Now
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </section>
+              </div>
             </>
           )}
-
-          {/* Newsletter */}
-          <div className="mt-24 bg-gradient-to-r from-gray-800 to-black text-white rounded-2xl overflow-hidden p-10">
+<div className="mt-24 rounded-2xl overflow-hidden p-10" style={{ background: 'linear-gradient(90deg, #071211, #19181a)', color: '#fff' }}>
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-4">Shop With Zero Risk</h2>
           
               <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            
+              
               </form>
             </div>
           </div>
@@ -400,13 +489,13 @@ export default function StorePage(): any{
               <h3 className="text-lg font-bold mb-4">Contact</h3>
               <ul className="space-y-3 text-gray-400">
                 <li className="flex items-start">
-                  <svg className="w-5 h-5 mr-3 mt-0.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 mr-3 mt-0.5 icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                   <span>+1 (555) 123-4567</span>
                 </li>
                 <li className="flex items-start">
-                  <svg className="w-5 h-5 mr-3 mt-0.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 mr-3 mt-0.5 icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   <span>support@{user.full_name?.toLowerCase().replace(/\s+/g, '') || 'store'}.com</span>
