@@ -7,7 +7,7 @@ export function HomePage() {
   const primaryDark = "#002216"; // darker variant
 
 const products = [
-  { id: 1, name: "Classic Running Shoe", price: "$69.99", img: "/images/shoe.jpg" },
+  { id: 1, name: "Best Running Shoe", price: "$69.99", img: "/images/shoe.jpg" },
   { id: 2, name: "Signature Perfume",     price: "$59.99", img: "/images/perfume.jpg" },
   { id: 3, name: "Everyday Shoe",      price: "$24.99", img: "/images/tshirt.jpg" },
   { id: 4, name: "Whey Protein Powder",   price: "$34.99", img: "/images/protein.jpg" }
