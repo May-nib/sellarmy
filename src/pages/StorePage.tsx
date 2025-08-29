@@ -7,7 +7,7 @@ type User = {
   id: string;
   full_name: string;
   description?: string | null;
-  profile_image?: string | null;
+  avatar_url?: string | null;
   slug?: string | null;
 };
 
@@ -62,7 +62,7 @@ export default function StorePage(): any{
         // Fetch user by slug
         const { data: userData, error: userError } = await supabaseClient
           .from('users')
-          .select('id, full_name')
+          .select('id, full_name, avatar_url')
           .ilike('full_name', `%${rawSlug}%`)
           .maybeSingle();
 
@@ -106,12 +106,13 @@ export default function StorePage(): any{
     loadStore();
     return () => { isMounted = false; };
   }, [slug]);
+//    .accent-btn { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; }
 
   // small utility styles are injected here so we don't touch logic or your tailwind config
   const styleBlock = `
     :root{ --primary: ${primary}; --primary-light: ${primaryLight}; --primary-dark: ${primaryDark}; }
     .accent-gradient { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
-    .accent-btn { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; }
+    .accent-btn { background: #003303; color: #fff; }
     .accent-btn:hover { background: linear-gradient(90deg, var(--primary-dark), var(--primary)); }
     .accent-select:focus { outline: none; box-shadow: 0 0 0 4px rgba(0,51,3,0.12); border-color: var(--primary) !important; }
     .accent-circle { background: linear-gradient(90deg, var(--primary-light), var(--primary)); }
@@ -204,7 +205,7 @@ export default function StorePage(): any{
     <div className="min-h-screen flex flex-col bg-gray-50">
       <style>{styleBlock}</style>
       {/* Premium Store Header */}
-      <header className="relative bg-gradient-to-b from-gray-900 to-black text-white py-16 overflow-hidden">
+      <header className="relative bg-black text-white py-16 overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 right-10 w-64 h-64 rounded-full mix-blend-soft-light blur-3xl animate-pulse-slow accent-gradient"></div>
@@ -214,10 +215,10 @@ export default function StorePage(): any{
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col items-center text-center">
             <div className="mb-6 border-4 border-white/20 rounded-full p-1">
-              {user.profile_image ? (
+              {user.avatar_url ? (
                 <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl">
                   <img
-                    src={user.profile_image}
+                    src={user.avatar_url || '/images/avatar-placeholder.png'}
                     alt={user.full_name}
                     className="w-full h-full object-cover"
                   />
@@ -424,13 +425,13 @@ export default function StorePage(): any{
                         </div>
 
                         <div className="mt-4 flex space-x-3">
-                          <button className="flex-1 bg-gray-800 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-900 transition duration-300 flex items-center justify-center">
+                          <button className="flex-1 bg-gray-100 text-black py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition duration-300 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                             Add to Cart
                           </button>
-                          <button className="accent-btn text-white py-2 px-4 rounded-lg font-medium hover:opacity-95 transition duration-300 flex items-center justify-center">
+                          <button className="accent-btn text-white py-2 px-4 rounded-lg font-medium hover:opacity-75 transition duration-300 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
