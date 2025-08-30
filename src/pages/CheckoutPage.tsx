@@ -220,7 +220,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     const totalCommission = totalAmount * (commissionRate / 100);
 
     // Try to get the current user, but don't require authentication
-    let userId = null;
+    /*let userId = null;
     try {
       const { data: { user } } = await supabaseClient.auth.getUser();
       userId = user?.id || null;
@@ -228,7 +228,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       console.log('No authenticated user, proceeding as guest');
       // Continue without a user ID for guest checkout
     }
-
+*/
     // Create order
     const { data: order, error: orderError } = await supabaseClient
       .from('orders')
