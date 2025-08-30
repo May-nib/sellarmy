@@ -5,6 +5,12 @@ export function HomePage() {
   const primaryLight = "#1a6b3f"; // lighter variant
   const primaryDark = "#002216"; // darker variant
 
+  const scrollToId = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+
 const products = [
   { id: 1, name: "Best Running Shoe", price: "$69.99", img: "/images/shoe.jpg" },
   { id: 2, name: "Signature Perfume",     price: "$59.99", img: "/images/perfume.jpg" },
@@ -48,17 +54,30 @@ const products = [
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(90deg, ${primaryLight}, ${primary})` }}>
-            <span className="font-bold text-xl">S</span>
-          </div>
-          <h1 className="text-2xl font-bold" style={{ background: `-webkit-linear-gradient(90deg, ${primaryLight}, ${primary})`, WebkitBackgroundClip: 'text', color: 'transparent' }}>
+         <div
+  className="w-10 h-10  p-[0px] flex items-center justify-center"
+  style={{ background: `linear-gradient(90deg, ${primaryLight}, ${primary})` }}
+>
+  <div className="w-full h-full  overflow-hidden bg-black">
+   <img
+  src={'/images/sellarmy.png'}
+  alt={'Logo avatar'}
+  className="w-10 h-10  object-cover"
+  loading="lazy"
+  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/avatar-placeholder.png'; }}
+/>
+
+  </div>
+</div>
+          <h1 className="text-2xl font-bold" style={{ background: `-webkit-linear-gradient(90deg, ${primaryLight}, ${primary})`, WebkitBackgroundClip: 'text', color: 'white' }}>
             Sellarmy
           </h1>
         </div>
         <div className="hidden md:flex space-x-8">
-          <a href="#how-it-works" className="hover:opacity-90 text-white transition">How It Works</a>
-          <a href="#benefits" className="hover:opacity-90 text-white transition">Benefits</a>
-          <a href="#testimonials" className="hover:opacity-90 text-white transition">Success Stories</a>
+          <a href="#howitworks" className="hover:opacity-90 text-white transition" onClick={(e) => { e.preventDefault(); scrollToId('howitworks'); }}
+            >How It Works</a>
+          <a href="#benefits" className="hover:opacity-90 text-white transition" onClick={(e) => { e.preventDefault(); scrollToId('benefits'); }}>Benefits</a>
+          <a href="#testimonials" className="hover:opacity-90 text-white transition" onClick={(e) => { e.preventDefault(); scrollToId('testimonials'); }}>Success Stories</a>
         </div>
         <div>
           <Link 
@@ -75,7 +94,7 @@ const products = [
       <div className="container mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-12 md:mb-0">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Turn Your Influence Into <span style={{ background: `-webkit-linear-gradient(90deg, ${primaryLight}, ${primary})`, WebkitBackgroundClip: 'text', color: 'transparent' }}>Income</span>
+            Turn Your Influence Into <span style={{ background: `transparent`, WebkitBackgroundClip: 'text', color: 'yellow' }}>Income</span>
             <br />With Zero Risk
           </h1>
           <p className="text-xl text-purple-200 mb-8 max-w-lg"> 
@@ -128,31 +147,44 @@ const products = [
         </div>
 
         <div className="md:w-1/2 flex justify-center">
-          <div className="relative w-full max-w-md">
+          <div className="relative  w-full max-w-md">
             <div className="absolute -top-10 -left-10 w-64 h-64 rounded-full mix-blend-soft-light blur-3xl opacity-30" style={{ background: `radial-gradient(circle at 20% 20%, ${primaryLight}, ${primary})` }}></div>
 
-            <div className="relative product-badge rounded-3xl p-8 transform rotate-3 shadow-2xl primary-border">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(90deg, ${primaryLight}, ${primary})` }}>
-                    <span className="font-bold text-xl">S</span>
-                  </div>
-                  <div className="ml-3">
+            <div className="relative   product-badge rounded-3xl p-8 transform rotate-3 shadow-2xl primary-border">
+              <div className="flex  justify-between items-center mb-6">
+                <div className="flex  items-center">
+                   <div
+  className="w-10 h-10   p-[0px] flex items-center justify-center"
+  style={{ background: `linear-gradient(90deg, ${primaryLight}, ${primary})` }}
+>
+  <div className="w-full h-full   overflow-hidden bg-black">
+   <img
+  src={'/images/sellarmy.png'}
+  alt={'Logo avatar'}
+  className="w-10 h-10  object-cover"
+  loading="lazy"
+  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/avatar-placeholder.png'; }}
+/>
+
+  </div>
+</div>
+                  <div className="ml-3 ">
                     <h3 className="font-bold">@yourbrand</h3>
                     <p className="text-sm text-purple-200">Your Personal Shop</p>
                   </div>
                 </div>
-                <div className="p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <div className="p-2 rounded-lg " style={{ background: 'rgba(255, 255, 255, 0.03)' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
                 </div>
               </div>
+              
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid  grid-cols-2 gap-4">
                 {products.map((item) => (
-                  <div key={item.id} className="rounded-xl p-4 primary-border" style={{ background: 'rgba(0,0,0,0.25)' }}>
-                    <img src={item.img} alt={item.name} className="w-full h-32 object-cover rounded-lg mb-3" />
+                  <div key={item.id} className="rounded-xl  p-4 primary-border" style={{ background: 'rgba(0,0,0,0.25)' }}>
+                    <img src={'/images/sellarmy.png'} alt={item.name} className="w-full h-32 object-cover rounded-lg mb-3" />
                     <h4 className="font-bold">{item.name}</h4>
                     <div className="flex justify-between items-center mt-2">
                       <span className="font-bold" style={{ color: primaryLight }}>{item.price}</span>
@@ -181,7 +213,7 @@ const products = [
       </div>
 
       {/* How It Works Section */}
-      <div id="how-it-works" className="py-16" style={{ background: 'linear-gradient(180deg, rgba(26,19,51,0.25), rgba(7,16,41,0.25))' }}>
+      <div id="howitworks" className="py-16" style={{ background: 'linear-gradient(180deg, rgba(26,19,51,0.25), rgba(7,16,41,0.25))' }}>
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How Sellarmy Works</h2>
