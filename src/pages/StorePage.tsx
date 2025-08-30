@@ -6,6 +6,7 @@ import supabaseClient from '../lib/supabaseClient';
 type User = {
   id: string;
   full_name: string;
+  business_name?: string | null;
   description?: string | null;
   avatar_url?: string | null;
   slug?: string | null;
@@ -62,7 +63,7 @@ export default function StorePage(): any{
         // Fetch user by slug
         const { data: userData, error: userError } = await supabaseClient
           .from('users')
-          .select('id, full_name, avatar_url')
+          .select('id, full_name, business_name, avatar_url')
           .ilike('full_name', `%${rawSlug}%`)
           .maybeSingle();
 
@@ -231,7 +232,7 @@ export default function StorePage(): any{
             </div>
 
             <div className="mb-6">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">{user.full_name}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">{user.business_name}</h1>
 
               {user.description && (
                 <p className="text-lg text-gray-300 max-w-2xl mx-auto">{user.description}</p>
@@ -448,6 +449,7 @@ export default function StorePage(): any{
               </div>
             </>
           )}
+{ /* Newsletter Signup 
 <div className="mt-24 rounded-2xl overflow-hidden p-10" style={{ background: 'linear-gradient(90deg, #071211, #19181a)', color: '#fff' }}>
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-4">Shop With Zero Risk</h2>
@@ -457,6 +459,7 @@ export default function StorePage(): any{
               </form>
             </div>
           </div>
+          */}
         </div>
       </main>
 
