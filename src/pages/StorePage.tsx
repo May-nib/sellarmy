@@ -113,6 +113,9 @@ export default function StorePage(): any{
   const styleBlock = `
     :root{ --primary: ${primary}; --primary-light: ${primaryLight}; --primary-dark: ${primaryDark}; }
     .accent-gradient { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
+    .hed{
+    background: #003303; 
+    }
     .accent-btn { 
       background: #003303; 
       color: #fff; 
@@ -256,7 +259,7 @@ export default function StorePage(): any{
       <style>{styleBlock}</style>
       
       {/* Premium Store Header with Banner */}
-      <header className="relative bg-black/90 text-white overflow-hidden">
+      <header className="relative text-white overflow-hidden" style={{ background: '#001101ff' }}>
         {/* Banner Image */}
         <div className="h-40 w-full relative">
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-80 z-10"></div>
