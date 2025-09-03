@@ -358,7 +358,7 @@ const handleBuyNow = () => {
                 <label className="block text-black text-sm font-medium mb-1">Quantity</label>
                 <div className="flex items-center gap-2">
                   <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="px-3 py-2 rounded-md border" type="button">-</button>
-                  <div className="px-3 py-2 border rounded-md">{quantity}</div>
+                  <div className="px-3 py-2  text-black border rounded-md">{quantity}</div>
                   <button onClick={() => setQuantity((q) => q + 1)} className="px-3 py-2 rounded-md border" type="button">+</button>
                 </div>
               </div>
